@@ -39,6 +39,9 @@ export class WaitListPageComponent implements OnInit, OnDestroy {
   loading = false;
   step = '0';
   loadingData = false;
+  infodata: any = {}
+  newQuestion = '';
+  newAnswer = '';
   
   constructor(public translate: TranslateService, public toastr: ToastrService, private apiDx29ServerService: ApiDx29ServerService, private modalService: NgbModal) {
   }
@@ -56,6 +59,9 @@ export class WaitListPageComponent implements OnInit, OnDestroy {
 
   start(){
     this.step = '1';
+  }
+  goback(){
+    this.step = '0';
   }
 
   onKey(event: KeyboardEvent) {
@@ -113,7 +119,7 @@ showMoreInfoDiagnosePopup(index){
       html: '<p class="mt-2">You have selected: '+tempDisease.name+'</p><p class="mt-2">'+tempDisease.id+'</p>',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#F55252',
+      confirmButtonColor: '#24b4a5',
       confirmButtonText: 'Yes, I am sure.',
       cancelButtonColor: '#b0b6bb',
       cancelButtonText: this.translate.instant("generics.Cancel"),
@@ -122,13 +128,11 @@ showMoreInfoDiagnosePopup(index){
   }).then((result) => {
       if (result.value) {
         this.actualInfoOneDisease = this.listOfFilteredDiseases[this.selectedDiseaseIndex];
-        console.log(this.actualInfoOneDisease)
-        //call to server
-        this.getInfo(this.actualInfoOneDisease.name);
+        console.log(this.actualInfoOneDisease)        
         this.haveInfo = true;
         this.loadingData = true;
         this.loadingOneDisease = false;
-
+        this.getInfo(this.actualInfoOneDisease.name);
       }
       this.clearsearchDiseaseField();
   });
@@ -136,16 +140,72 @@ showMoreInfoDiagnosePopup(index){
 }
 
 getInfo(name){
+  this.infodata = {
+    "orphanDrugs": [
+      {
+        "name": "Orphan Drug 1"
+      },
+      {
+        "name": "Orphan Drug 2"
+      },
+      {
+        "name": "Orphan Drug 3"
+      }
+    ],
+    "questionsAnswers": [
+      {
+        "question": "Question 1",
+        "answer": "Answer 1",
+        "rating": 0,
+        "feedback": ''
+      },
+      {
+        "question": "Question 2",
+        "answer": "Answer 2",
+        "rating": 0,
+        "feedback": ''
+      },
+      {
+        "question": "Question 3",
+        "answer": "Answer 4",
+        "rating": 0,
+        "feedback": ''
+      }
+    ]
+  }
+  this.loadingData = false;
+
+  /*
   this.subscription.add(this.apiDx29ServerService.getInfo(name)
   .subscribe((res: any) => {
     console.log(res)
     this.loadingData = false;
   }, (err) => {
     console.log(err);
-  }));
+  }));*/
 }
 
 
+addQuestionAnswer() {
+  if (this.newQuestion && this.newAnswer) {
+    this.infodata.questionsAnswers.push({ question: this.newQuestion, answer: this.newAnswer });
+    this.newQuestion = '';
+    this.newAnswer = '';
+  }
+}
+
+saveAllData(){
+  //Swal que diga que se guardo correctamente
+  Swal.fire({
+    title: 'Saved',
+    icon: 'success',
+    showConfirmButton: false,
+    timer: 1500
+  });
+  this.actualInfoOneDisease = {};
+  this.haveInfo = false;
+  this.step = '0';
+}
 
 focusOutFunctionDiseases(){
   //if (this.searchDiseaseField.trim().length > 3 && this.listOfFilteredDiseases.length==0 && !this.callListOfDiseases) {
@@ -166,7 +226,7 @@ deleteDisease(){
     title: this.translate.instant("generics.Are you sure?"),
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#F55252',
+    confirmButtonColor: '#24b4a5',
     cancelButtonColor: '#b0b6bb',
     confirmButtonText: this.translate.instant("generics.Delete"),
     cancelButtonText: this.translate.instant("generics.No, cancel"),
