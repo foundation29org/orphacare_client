@@ -143,31 +143,31 @@ getInfo(name){
   this.infodata = {
     "orphanDrugs": [
       {
-        "name": "Orphan Drug 1"
+        "name": "Stiripentol (Diacomit)"
       },
       {
-        "name": "Orphan Drug 2"
+        "name": "Cannabidiol (Epidiolex)"
       },
       {
-        "name": "Orphan Drug 3"
+        "name": "Fenfluramine (Fintepla)"
       }
     ],
     "questionsAnswers": [
       {
-        "question": "Question 1",
-        "answer": "Answer 1",
+        "question": "What is Stiripentol (Diacomit) used for?",
+        "answer": "Stiripentol (Diacomit) is used to treat seizures associated with Dravet syndrome in patients taking clobazam.",
         "rating": 0,
         "feedback": ''
       },
       {
-        "question": "Question 2",
-        "answer": "Answer 2",
+        "question": "How does Cannabidiol (Epidiolex) work for Dravet syndrome?",
+        "answer": "Cannabidiol (Epidiolex) works by interacting with the body's endocannabinoid system to reduce the frequency of seizures in patients with Dravet syndrome.",
         "rating": 0,
         "feedback": ''
       },
       {
-        "question": "Question 3",
-        "answer": "Answer 4",
+        "question": "What are the side effects of Fenfluramine (Fintepla)?",
+        "answer": "Common side effects of Fenfluramine (Fintepla) include decreased appetite, drowsiness, and fatigue. Serious side effects may include valvular heart disease and pulmonary arterial hypertension.",
         "rating": 0,
         "feedback": ''
       }
