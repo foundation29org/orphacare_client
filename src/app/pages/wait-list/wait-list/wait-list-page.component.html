@@ -123,7 +123,7 @@
                                   <input type="text" [(ngModel)]="qa.question" class="form-control mb-2">
                                   
                                   <label>A: </label>
-                                  <input type="text" [(ngModel)]="qa.answer" class="form-control mb-2">
+                                  <textarea [(ngModel)]="qa.answer" class="form-control mb-2" rows="3"></textarea>
                                   <div class="mt-3">
                                     <label>Rate this question:</label>
                                     <ngb-rating [(rate)]="qa.rating" max="5" class="my-rating col-4"></ngb-rating>
@@ -142,7 +142,7 @@
                               </div>
                               <div class="mb-3">
                                 <label for="answer" class="form-label">Your Answer</label>
-                                <input type="text" class="form-control" id="answer" [(ngModel)]="newAnswer">
+                                <textarea class="form-control" id="answer" [(ngModel)]="newAnswer" rows="3"></textarea>
                               </div>
                               <button class="btn btn-primary" (click)="addQuestionAnswer()">Add Question and Answer</button>
                             </div>
