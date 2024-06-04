@@ -1,16 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TrackEventsService } from 'app/shared/services/track-events.service';
-import { TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { Subscription, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Clipboard } from "@angular/cdk/clipboard"
-import Swal from 'sweetalert2';
 import { NgbModal, NgbModalRef, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-import { ApiDx29ServerService } from 'app/shared/services/api-dx29-server.service';
 import { PrivacyPolicyPageComponent } from 'app/pages/content-pages/privacy-policy/privacy-policy.component';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import Swal from 'sweetalert2';
+import { ApiDx29ServerService } from 'app/shared/services/api-dx29-server.service';
 
 @Component({
   selector: 'app-wait-list-page',
@@ -20,130 +15,174 @@ import { PrivacyPolicyPageComponent } from 'app/pages/content-pages/privacy-poli
 })
 
 export class WaitListPageComponent implements OnInit, OnDestroy {
-  contactForm: FormGroup;
-  submitPressed = false;  // Añade esta línea
-  sending: boolean = false;
   modalReference: NgbModalRef;
-  @ViewChild('section1', { static: false }) section1: ElementRef;
-  @ViewChild('section2', { static: false }) section2: ElementRef;
+
 
   private subscription: Subscription = new Subscription();
+  idUser: string;
+  haveInfo: Boolean = false;
+  trash = [];
+  newItemName: string = '';
+  disease: any = { "id": "", "name": "", "items": []} ;
 
   nothingFoundDisease: boolean = false;
   searchDiseaseField: string = '';
+  actualInfoOneDisease: any = {};
+  private subscriptionDiseasesCall: Subscription = new Subscription();
+  private subscriptionDiseasesNotFound: Subscription = new Subscription();
   callListOfDiseases: boolean = false;
-
-  loadedItems: Boolean = false;
-  haveInfo: Boolean = false;
-  disease: any = { "id": "", "name": "", "items": [], "userId": "" };
-  searchSubject = new Subject<string>();
   listOfFilteredDiseases: any = [];
+  selectedDiseaseIndex: number = -1;
+  loadingOneDisease: boolean = false;
+  gettingItems: boolean = false;
+  bodyElement: HTMLElement = document.body;
+  loading = false;
+  step = '0';
+  loadingData = false;
   
-  constructor(public translate: TranslateService, public trackEventsService: TrackEventsService, private clipboard: Clipboard, private fb: FormBuilder, public toastr: ToastrService, private modalService: NgbModal, private apiDx29ServerService: ApiDx29ServerService, private router: Router) {
-    this.searchSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged()
-    ).subscribe(searchText => this.loadItemsFromDatabase(searchText));
-  }
-
-  ngOnInit(): void {
-    this.contactForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      subject: ['', Validators.required],
-      message: ['', [Validators.required, Validators.maxLength(1500)]]
-    });
+  constructor(public translate: TranslateService, public toastr: ToastrService, private apiDx29ServerService: ApiDx29ServerService, private modalService: NgbModal) {
   }
 
 
-  scrollToSection(sectionIndex: number) {
-    const sections = [this.section1, this.section2];
-    sections[sectionIndex].nativeElement.scrollIntoView({ behavior: 'smooth' });
-
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+  async ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
 
-  share() {
-    this.clipboard.copy('https://nav29.org');
-    Swal.fire({
-      icon: 'success',
-      html: this.translate.instant("generics.Copied to the clipboard"),
-      showCancelButton: false,
-      showConfirmButton: false,
-      allowOutsideClick: false
-    })
+  async ngOnInit() {
 
-    setTimeout(function () {
-      Swal.close();
-    }, 2000);
   }
 
-
-  onKey2(event: any): void {
-    this.haveInfo = false;
-    // Emite el valor actual del campo de búsqueda
-    this.searchSubject.next(this.searchDiseaseField);
-  }
-
-  loadItemsFromDatabase(searchText: string): void {
-    if (!searchText) {
-      // Manejar el estado cuando no hay texto
-      return;
-    }
-    this.disease = { "id": "", "name": "", "items": [], "userId": ""};
-    this.callListOfDiseases = true;
-    this.listOfFilteredDiseases = [];
-    this.apiDx29ServerService.searchItems(searchText)
-      .subscribe((res: any) => {
-        this.callListOfDiseases = false;
-        console.log(res)
-        if (res.diseases) {
-          this.listOfFilteredDiseases = res.diseases;
-        } else {
-          this.listOfFilteredDiseases = [];
-        }
-      }, (err) => {
-        this.callListOfDiseases = false;
-        this.listOfFilteredDiseases = [];
-        // Manejar errores aquí
-        // ...
-      });
-  }
-
-  selectDisease(index) {
-    this.disease = this.listOfFilteredDiseases[index];
-    if (this.disease.items.length > 0) {
-      this.haveInfo = true;
-      //this.router.navigate(['/conditions', this.disease.id]);  
-      this.router.navigate(['/conditions'], { queryParams: { id: this.disease.id } });
-
-    } else {
-      this.haveInfo = false;
-    }
-    this.clearsearchDiseaseField();
-    //wait 500ms to scroll to section 2
-    setTimeout(() => {
-      this.scrollToSection(1);
-    }, 200);
-  }
-
-  clearsearchDiseaseField() {
-    this.searchDiseaseField = "";
-    this.listOfFilteredDiseases = [];
-    this.callListOfDiseases = false;
+  start(){
+    this.step = '1';
   }
 
   onKey(event: KeyboardEvent) {
-    this.nothingFoundDisease = false;
-    this.loadedItems = false;
-    this.haveInfo = false;
-    this.disease = { "id": "", "name": "", "items": [], "userId": ""};
+    if(event.key ==='ArrowLeft' || event.key ==='ArrowUp' || event.key ==='ArrowRight' || event.key ==='ArrowDown'){
+
+    }else{
+        this.nothingFoundDisease = false;
+        if (this.searchDiseaseField.trim().length > 3) {
+            if (this.subscriptionDiseasesCall) {
+                this.subscriptionDiseasesCall.unsubscribe();
+            }
+            if (this.subscriptionDiseasesNotFound) {
+                this.subscriptionDiseasesNotFound.unsubscribe();
+            }
+            this.callListOfDiseases = true;
+            var tempModelTimp = this.searchDiseaseField.trim();
+            var info = {
+                "text": tempModelTimp,
+                "lang": 'en'
+            }
+            this.subscriptionDiseasesCall= this.apiDx29ServerService.searchDiseases(info)
+                .subscribe((res: any) => {
+                    this.callListOfDiseases = false;
+                    if(res==null){
+                        this.nothingFoundDisease = true;
+                        this.listOfFilteredDiseases = [];
+                    }else{
+                        this.nothingFoundDisease = false;
+                        this.listOfFilteredDiseases = res;
+                        if(this.listOfFilteredDiseases.length == 0){
+                            this.nothingFoundDisease = true;
+                        }
+                    }
+                    
+                }, (err) => {
+                    console.log(err);
+                    this.nothingFoundDisease = false;
+                    this.callListOfDiseases = false;
+                });
+        } else {
+            this.callListOfDiseases = false;
+            this.listOfFilteredDiseases = [];
+        }
+    }
+}
+
+showMoreInfoDiagnosePopup(index){
+  this.loadingOneDisease = true;
+  this.selectedDiseaseIndex = index;
+  let tempDisease = this.listOfFilteredDiseases[index];
+  
+
+  Swal.fire({
+      title: this.translate.instant("generics.Are you sure?"),
+      html: '<p class="mt-2">You have selected: '+tempDisease.name+'</p><p class="mt-2">'+tempDisease.id+'</p>',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#F55252',
+      confirmButtonText: 'Yes, I am sure.',
+      cancelButtonColor: '#b0b6bb',
+      cancelButtonText: this.translate.instant("generics.Cancel"),
+      showLoaderOnConfirm: true,
+      allowOutsideClick: false
+  }).then((result) => {
+      if (result.value) {
+        this.actualInfoOneDisease = this.listOfFilteredDiseases[this.selectedDiseaseIndex];
+        console.log(this.actualInfoOneDisease)
+        //call to server
+        this.getInfo(this.actualInfoOneDisease.name);
+        this.haveInfo = true;
+        this.loadingData = true;
+        this.loadingOneDisease = false;
+
+      }
+      this.clearsearchDiseaseField();
+  });
+  
+}
+
+getInfo(name){
+  this.subscription.add(this.apiDx29ServerService.getInfo(name)
+  .subscribe((res: any) => {
+    console.log(res)
+    this.loadingData = false;
+  }, (err) => {
+    console.log(err);
+  }));
+}
+
+
+
+focusOutFunctionDiseases(){
+  //if (this.searchDiseaseField.trim().length > 3 && this.listOfFilteredDiseases.length==0 && !this.callListOfDiseases) {
+  if (this.searchDiseaseField.trim().length > 3 && !this.callListOfDiseases) {
+      //send text
+    
   }
+}
+
+clearsearchDiseaseField(){
+  this.searchDiseaseField = "";
+  this.listOfFilteredDiseases = [];
+  this.callListOfDiseases = false;
+}
+  
+deleteDisease(){
+  Swal.fire({
+    title: this.translate.instant("generics.Are you sure?"),
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#F55252',
+    cancelButtonColor: '#b0b6bb',
+    confirmButtonText: this.translate.instant("generics.Delete"),
+    cancelButtonText: this.translate.instant("generics.No, cancel"),
+    showLoaderOnConfirm: true,
+    allowOutsideClick: false
+  }).then((result) => {
+    if (result.value) {
+      this.confirmDeleteDisease();
+    }
+  });
+}
+
+confirmDeleteDisease(){
+  this.actualInfoOneDisease = {};
+  this.haveInfo = false;
+}
 
   openPolicy() {
     let ngbModalOptions: NgbModalOptions = {
@@ -157,47 +196,7 @@ export class WaitListPageComponent implements OnInit, OnDestroy {
       this.modalReference.close()
     }
   }
-  openContactForm(content) {
-    this.modalReference = this.modalService.open(content);
-  }
 
-  get f() { return this.contactForm.controls; }
 
-  onSubmit() {
-    if (this.contactForm.invalid) {
-
-      // Si el formulario es inválido, detén la ejecución y muestra errores.
-      return;
-    } else {
-      this.sending = true;
-      this.subscription.add(this.apiDx29ServerService.sendMsgValidator(this.disease.userId, this.contactForm.value)
-        .subscribe((res: any) => {
-          this.sending = false;
-          this.toastr.success('Message sent successfully');
-          if (this.modalReference != undefined) {
-            this.modalReference.close()
-          }
-          //reset form
-          setTimeout(() => {
-            if (this.contactForm) {
-              this.contactForm.reset();
-            } else {
-                console.error('Intento de resetear un formulario no inicializado.');
-            }
-          }, 500); // espera 500 milisegundos antes de resetear el formulario
-          /*this.contactForm.patchValue({
-            email: '',
-            subject: '',
-            message: ''
-          })*/
-        }, (err) => {
-          console.log(err);
-          this.sending = false;
-          this.toastr.error('Error sending message');
-        }));
-    }
-    console.log(this.contactForm.value);
-    // Aquí implementas la lógica de envío, como enviar a un backend.
-  }
 
 }

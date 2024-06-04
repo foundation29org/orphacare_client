@@ -10,7 +10,6 @@ import { ErrorPageComponent } from "./error/error-page.component";
 import { LoginPageComponent } from "./login/login-page.component";
 import { TermsConditionsPageComponent } from "./terms-conditions/terms-conditions-page.component";
 import { PrivacyPolicyPageComponent } from "./privacy-policy/privacy-policy.component";
-import { SharePageComponent } from './share/share.component';
 import { SharedModule } from "app/shared/shared.module";
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -65,8 +64,7 @@ export function createTranslateLoader(http: HttpClient) {
     ErrorPageComponent,
     LoginPageComponent,
     TermsConditionsPageComponent,
-    PrivacyPolicyPageComponent,
-    SharePageComponent
+    PrivacyPolicyPageComponent
   ],
   entryComponents:[PrivacyPolicyPageComponent]
 })

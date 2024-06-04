@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { WaitListPageComponent } from "./wait-list/wait-list-page.component";
-import { ValidatedConditionsPageComponent } from "./validated-conditions/validated-conditions-page.component";
 import { AboutUsPageComponent } from "./about-us/about-us-page.component";
 import { BehindPageComponent } from "./behind/behind-page.component";
 
@@ -15,13 +14,6 @@ const routes: Routes = [
         component: WaitListPageComponent,
         data: {
           title: 'OrphaCare'
-        },
-      },
-      {
-        path: 'conditions',
-        component: ValidatedConditionsPageComponent,
-        data: {
-          title: 'Validated conditions'
         },
       },
       {

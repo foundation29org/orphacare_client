@@ -34,7 +34,6 @@ export class NavbarD29Component implements OnInit, AfterViewInit, OnDestroy {
   isAboutPage: boolean = false;
   isBehingPage: boolean = false;
   isDonaPage: boolean = false;
-  isValidatedConditionsPage: boolean = false;
   role: string = 'Clinical';
   subrole: string = 'null';
   _startTime: any;
@@ -54,28 +53,20 @@ export class NavbarD29Component implements OnInit, AfterViewInit, OnDestroy {
           this.isHomePage = true;
           this.isAboutPage = false;
           this.isBehingPage = false;
-          this.isValidatedConditionsPage = false;
           this.role = 'Clinical';
           this.subrole = 'null';
         } else if (tempUrl.indexOf('/aboutus') != -1) {
           this.isHomePage = false;
           this.isAboutPage = true;
           this.isBehingPage = false;
-          this.isValidatedConditionsPage = false;
         } else if (tempUrl.indexOf('/behind') != -1) {
           this.isHomePage = false;
           this.isAboutPage = false;
           this.isBehingPage = true;
-        } else if (tempUrl.indexOf('/conditions') != -1) {
-          this.isHomePage = false;
-          this.isAboutPage = false;
-          this.isBehingPage = false;
-          this.isValidatedConditionsPage = true;
-        } else {
+        }else {
           this.isHomePage = false;
           this.isAboutPage = false;
           this.isBehingPage = true;
-          this.isValidatedConditionsPage = false;
         }
     });
     this.innerWidth = window.innerWidth;

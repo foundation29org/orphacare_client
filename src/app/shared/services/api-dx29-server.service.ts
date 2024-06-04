@@ -21,8 +21,8 @@ export class ApiDx29ServerService {
       );
     }
 
-    searchItems(item){
-      return this.http.get(environment.api+'/api/searchdisease/'+item).pipe(
+    getInfo(name){
+      return this.http.get(environment.api+'/api/getinfo/'+name).pipe(
         map((res: any) => {
           return res;
         }),
@@ -34,121 +34,4 @@ export class ApiDx29ServerService {
       );
     }
 
-    validatedItems(){
-      return this.http.get(environment.api+'/api/validateddiseases').pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-    selectDisease(orphacode){
-      return this.http.get(environment.api+'/api/selectdisease/'+orphacode).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-
-    getItems(userId){
-      return this.http.get(environment.api+'/api/disease/'+userId).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-    updateItems(_id, info){
-      return this.http.put(environment.api+'/api/disease/'+_id, info).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-    saveItems(_id, info){
-      return this.http.post(environment.api+'/api/disease/'+_id, info).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-    deleteDisease(_id, info){
-      return this.http.post(environment.api+'/api/deletedisease/'+_id, info).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-    sendMsgValidator(userId, info){
-      return this.http.post(environment.api+'/api/validator/'+userId, info).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-    getProfile(userId){
-      return this.http.get(environment.api+'/api/profile/'+userId).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
-
-    setProfile(userId, info){
-      return this.http.put(environment.api+'/api/profile/'+userId, info).pipe(
-        map((res: any) => {
-          return res;
-        }),
-        catchError((err) => {
-          console.log(err);
-          this.insightsService.trackException(err);
-          return err;
-        })
-      );
-    }
 }

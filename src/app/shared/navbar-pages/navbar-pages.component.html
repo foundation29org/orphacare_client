@@ -13,9 +13,6 @@
                 <li class="nav-item mr-2" *ngIf="!isHomePage">
                   <a class="btn btn-dark mb-0 btn-navbar" [routerLink]="['/.']" (click)="trackEventsService.lauchEvent('Dashboard btn 1')">{{'menu.Dashboard' | translate }}</a>
                 </li>
-                <li class="nav-item mr-2"  *ngIf="!isLoginPage">
-                    <a class="btn btn-dark mb-0 btn-navbar" [routerLink]="['/login']" (click)="trackEventsService.lauchEvent('Login btn 1')">{{'login.Login' | translate }}</a>
-                  </li>
                 </ul>
             </div>
         </div>
