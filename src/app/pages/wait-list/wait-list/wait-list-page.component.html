@@ -1,0 +1,168 @@
+<div class="container-fluid d-flex flex-column">
+  <div #section1 class="mt-4" [ngClass]="(haveInfo)?'mar-custom':''">
+    <div class="row m-0" style="min-height: 100vh !important;">
+      <div class="col-md-6" [ngClass]="(!haveInfo)?'col-custom':''">
+        <img src="assets/img/header.webp" class="img-fluid round" alt="hero">
+      </div>
+      <div class="col-sm-12 col-md-6 flex-column" [ngClass]="(!haveInfo)?'col-custom':''" >
+        <div class="box-text">
+          <div class="title-desc">
+            <h4>Connecting communities to uncover keys elements in rare diseases</h4>
+            <p>Welcome to OrphaCare, an initiative to enhance patient centered rare disease research and drug development through community collaboration. Here, patients, clinicians, sponsors, healthcare experts, and researchers unite are able to identify key elements validated by patients for each rare disease, driving towards deeper understanding and innovative solutions.</p>
+          </div>
+            <div class="row align-items-end justify-content-center">
+              <h4 class="col-md-12 mt-4 mb-2">Find your condition</h4>
+              <div class="col-md-12 p-0" #section2>
+                <i class="fa fa-search mr-1 primary fa-1_7x align-middle"></i>
+                <input type="text" class="form-control d-inline border-custom" style="border-radius: 25px;
+                height: 45px;width: 80%;max-width: 500px;" [(ngModel)]="searchDiseaseField"
+                  (keyup)="onKey2($event)" placeholder="Type the name or the orphacode number"
+                  >
+                  <span *ngIf="searchDiseaseField.length>0" class="pointer" (click)="clearsearchDiseaseField();"
+                    style="position: relative;left: -44px;"><i class="fa fa-times ml-1"
+                      style="color: #70757a;"></i></span>
+              </div>
+              <div class="col-md-12 no-padding">
+                <div class="center-elements mt-2" *ngIf="callListOfDiseases">
+                  <em class="mt-2 fa fa-spinner fa-spin fa-3x fa-fw secondary"></em>
+                  <p>{{'generics.Please wait' | translate }}</p>
+                </div>
+                <div class="form-group mt-2 list-custom" *ngIf="!callListOfDiseases">
+                  <span *ngIf="listOfFilteredDiseases.length>0">
+                    <div class="table-cont">
+                      <table class="table mb-0 border" aria-labelledby="rare disease"
+                        style="background-color: #ffffff !important;">
+                        <tbody class="tableList">
+                          <tr *ngFor="let disease of listOfFilteredDiseases ; let i = index" class="d-flex">
+                            <td class="col-md-12 dropdown-item" id="{{disease.id}}"
+                              (click)="selectDisease(i);" style="cursor: pointer;">
+                              <span>{{disease.name}}</span>
+                              <span class="d-block font-small-3"><strong>Organization:</strong> {{disease.validatorInfo.organization}}</span>
+                              <span class="d-block font-small-3"><strong>Country:</strong> {{disease.validatorInfo.country}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </span>
+                  <span *ngIf="listOfFilteredDiseases.length==0 && searchDiseaseField.length>3 && disease.name ==''">
+                    <p>The disease has not been validated.</p>
+                    <p>If you are an expert in the disease you are looking for, you can log in and curate the information to make it publicly available.</p>
+                    <a class="btn btn-dark mb-0 btn-navbar" [routerLink]="['/login']"
+                              (click)="trackEventsService.lauchEvent('Login btn 1')">{{'login.Login' | translate }}</a>
+                  </span>
+                </div>
+              </div>
+              <div  class="col-md-12 no-padding">
+                <div>
+                  <div  class="form-group mt-2 list-custom" *ngIf="!callListOfDiseases">
+                    <div  *ngIf="disease.name !=''">
+                      <h4 class="mt-4">{{disease.name}}</h4>
+                      <ul class="pl-0 mb-0" *ngIf="disease.items.length >0 ">
+                        <li *ngFor="let item of disease.items; let i = index" class="list-group-item" #listItem>
+                          {{ i + 1 }}. <span class="item-content">{{ item.name }}</span>
+                        </li>
+                      </ul>
+                      <p class="mb-3">Updated on {{disease.updated | date}} </p>
+                      <div class="mb-4">
+                        <p class=""><strong>Who has validated the list:</strong></p>
+                        <p class="" *ngIf="disease.validatorInfo.organization">
+                          <span><strong class="d-block">Organization</strong>{{disease.validatorInfo.organization}}</span>
+                        </p>
+                        <p class="" *ngIf="disease.validatorInfo.country">
+                          <span><strong class="d-block">Country</strong>{{disease.validatorInfo.country}}</span>
+                        </p>
+                        <p class="" *ngIf="disease.validatorInfo.web">
+                          <span><strong class="d-block">Website</strong><a href="{{disease.validatorInfo.web}}" target="_blank">{{disease.validatorInfo.web}}</a></span>
+                        </p>
+                        <p class=""><em class="fa fa-envelope mr-1 primary"> </em><a class="primary" (click)="openContactForm(panelcontactForm)">Contact the validator</a></p>
+                      </div>
+                      
+                      
+                    </div>
+                    <div *ngIf="loadedItems">
+                      <div *ngIf="disease.items.length ==0">
+                        <p class="mt-4">No items found</p>
+                        <p>
+                          <a class="btn btn-dark mb-0 btn-navbar" [routerLink]="['/login']"
+                              (click)="trackEventsService.lauchEvent('Login btn 1')">{{'login.Login' | translate }}</a>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="flex-shrink-0 col-margin border-top" style="background: #ffffff;">
+      <div class="col-md-12 p-2 mt-2">
+        <div class="col-md-12 align-items-center text-center">
+          <div class="row align-items-end justify-content-center">
+            <a href="https://twitter.com/foundation29feb" target="_blank" type="button"
+            class="btn btn-primary btn-icon round mr-1 mb-1">
+            <i class="fa fa-twitter"></i>
+          </a>
+          <a href="https://www.linkedin.com/company/foundation29/" target="_blank" type="button"
+            class="btn btn-primary btn-icon round mr-1 mb-1">
+            <i class="fa fa-linkedin"></i>
+          </a>
+          </div>
+          <div class="">
+            <p class="mt-1 mb-0">&copy; 2024 <a href="https://foundation29.org/" target="_blank">Fundación 29</a> -
+              OrphaCare</p>
+            <a class="mt-0" href="javascript:;"
+              (click)="openPolicy();trackEventsService.lauchEvent('privacy-policy btn 1')">
+              <span>{{'registration.Privacy Policy' | translate }}</span>
+            </a>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+  </div>
+  <ng-template #panelcontactForm let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title primary">Contact the validator</h4>
+      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+        <mat-form-field class="col-md-12" appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+          <mat-error *ngIf="f.email.errors?.required">Email is required.</mat-error>
+          <mat-error *ngIf="f.email.errors?.email">Please enter a valid email.</mat-error>
+        </mat-form-field>
+      
+        <mat-form-field class="col-md-12" appearance="fill">
+          <mat-label>Subject</mat-label>
+          <input matInput formControlName="subject">
+          <mat-error *ngIf="f.subject.errors?.required">Subject is required.</mat-error>
+        </mat-form-field>
+      
+        <mat-form-field class="col-md-12" appearance="fill">
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="message" rows="5" maxlength="1500"></textarea>
+          <mat-hint align="end">{{ contactForm.get('message').value?.length || 0 }} / 1500</mat-hint>
+          <mat-error *ngIf="f.message.errors?.required">Message is required.</mat-error>
+          <mat-error *ngIf="f.message.errors?.maxlength">The message cannot exceed 500 characters.</mat-error>
+        </mat-form-field>
+        <div *ngIf="!sending" class="mt-2 col-md-12 center-elements">
+          <button class="btn btn-primary" type="submit">Send</button>
+        </div>
+        <div *ngIf="sending" class="mt-2 col-md-12 center-elements">
+          <em class="fa fa-spinner fa-spin fa-2x fa-fw primary"></em>
+        </div>
+        
+      </form>
+    </div>
+  </ng-template>
