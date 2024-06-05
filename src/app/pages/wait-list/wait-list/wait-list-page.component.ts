@@ -140,40 +140,40 @@ showMoreInfoDiagnosePopup(index){
 }
 
 getInfo(name){
-  // this.infodata = {
-  //   "orphanDrugs": [
-  //     {
-  //       "name": "Stiripentol (Diacomit)"
-  //     },
-  //     {
-  //       "name": "Cannabidiol (Epidiolex)"
-  //     },
-  //     {
-  //       "name": "Fenfluramine (Fintepla)"
-  //     }
-  //   ],
-  //   "questionsAnswers": [
-  //     {
-  //       "question": "What is Stiripentol (Diacomit) used for?",
-  //       "answer": "Stiripentol (Diacomit) is used to treat seizures associated with Dravet syndrome in patients taking clobazam.",
-  //       "rating": 0,
-  //       "feedback": ''
-  //     },
-  //     {
-  //       "question": "How does Cannabidiol (Epidiolex) work for Dravet syndrome?",
-  //       "answer": "Cannabidiol (Epidiolex) works by interacting with the body's endocannabinoid system to reduce the frequency of seizures in patients with Dravet syndrome.",
-  //       "rating": 0,
-  //       "feedback": ''
-  //     },
-  //     {
-  //       "question": "What are the side effects of Fenfluramine (Fintepla)?",
-  //       "answer": "Common side effects of Fenfluramine (Fintepla) include decreased appetite, drowsiness, and fatigue. Serious side effects may include valvular heart disease and pulmonary arterial hypertension.",
-  //       "rating": 0,
-  //       "feedback": ''
-  //     }
-  //   ]
-  // }
-  // this.loadingData = false;
+  /*this.infodata = {
+    "orphanDrugs": [
+      {
+        "name": "Stiripentol (Diacomit)"
+      },
+      {
+        "name": "Cannabidiol (Epidiolex)"
+      },
+      {
+        "name": "Fenfluramine (Fintepla)"
+      }
+    ],
+    "questionsAnswers": [
+      {
+        "question": "What is Stiripentol (Diacomit) used for?",
+        "answer": "Stiripentol (Diacomit) is used to treat seizures associated with Dravet syndrome in patients taking clobazam.",
+        "rating": 0,
+        "feedback": ''
+      },
+      {
+        "question": "How does Cannabidiol (Epidiolex) work for Dravet syndrome?",
+        "answer": "Cannabidiol (Epidiolex) works by interacting with the body's endocannabinoid system to reduce the frequency of seizures in patients with Dravet syndrome.",
+        "rating": 0,
+        "feedback": ''
+      },
+      {
+        "question": "What are the side effects of Fenfluramine (Fintepla)?",
+        "answer": "Common side effects of Fenfluramine (Fintepla) include decreased appetite, drowsiness, and fatigue. Serious side effects may include valvular heart disease and pulmonary arterial hypertension.",
+        "rating": 0,
+        "feedback": ''
+      }
+    ]
+  }
+  this.loadingData = false;*/
 
   this.subscription.add(this.apiDx29ServerService.getInfo(name)
   .subscribe((res: any) => {
@@ -182,6 +182,8 @@ getInfo(name){
     this.loadingData = false;
   }, (err) => {
     console.log(err);
+    this.loadingData = false;
+    this.toastr.error(this.translate.instant("generics.error try again"));
   }));
 }
 
