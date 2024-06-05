@@ -1,25 +1,53 @@
 <div style="margin-top: 4.3rem;">
   <div *ngIf="step=='0'" class="main-container">
-    <div class="" *ngIf="role!='Unknown'">
+    <div *ngIf="role!='Unknown'">
       <div class="offset-md-3 col-md-6 bg-white round heightpanelsm">
         <div class="row m-0 mb-4">
           <div class="text-center">
-              <h1 class="card-title text-bold-500">
-                Welcome to OrphaCare
+            <h1 class="card-title text-bold-500">
+              Empowering Patients in Rare Disease Treatment: Validating AI-Generated Responses for EMA-Approved Medications
               <hr class="hr-custom">
-              </h1>
-  
-              <p class="lead mt-3">
-                OrphaCare is your trusted platform for finding orphan drugs tailored to your specific medical conditions. Enter your condition to receive a list of related orphan drugs, along with a set of curated questions and answers to help you better understand your treatment options. You can also create and add your own questions to customize your experience. Start your journey towards better health with OrphaCare today.
-              </p>
-              <div class="row mt-4">
-                <div class="col-md-12 center-elements">
-                  <button class="btn btn-primary btn-lg mt-3" (click)="start()">Start</button>
-                </div>
-                
+            </h1>
+    
+            <p class="lead mt-3">
+              Welcome to our groundbreaking initiative that puts patients at the heart of validating a new AI model designed to provide accurate and reliable information about centrally approved medications for rare diseases by the European Medicines Agency (EMA).
+            </p>
+    
+            <h3 class="mt-4">How It Works</h3>
+            <ol class="text-left mt-2">
+              <li>Select your rare disease from the provided list.</li>
+              <li>Our AI model will suggest relevant questions and answers about EMA-approved medications for your condition.</li>
+              <li>Review the generated responses and rate their quality and accuracy.</li>
+              <li>Contribute by asking pertinent questions related to your disease and its treatments.</li>
+              <li>Validate the AI-generated answers to your questions, ensuring the information is precise and helpful.</li>
+            </ol>
+    
+            <h3 class="mt-4">Why Your Participation Matters</h3>
+            <p class="text-left mt-2">
+              By engaging in this validation process, you play a crucial role in leveraging human expertise to refine our AI model. Your input will help ensure that the information provided is accurate, up-to-date, and beneficial for patients seeking knowledge about their rare disease treatments.
+            </p>
+    
+            <h3 class="mt-4">Centralized Approval for Rare Diseases</h3>
+            <p class="text-left mt-2">
+              We focus on rare diseases because medications for these conditions undergo a centralized approval process by the EMA. This centralization ensures consistent and high-quality information across Europe, making it an ideal starting point for our AI model validation.
+            </p>
+    
+            <h3 class="mt-4">Your Contribution Makes a Difference</h3>
+            <p class="text-left mt-2">
+              As a patient living with a rare disease, your unique perspective and experiences are invaluable in shaping the future of treatment information accessibility. By dedicating your time and effort to this project, you are not only empowering yourself but also helping countless others who will benefit from the validated AI-generated responses.
+            </p>
+    
+            <p class="text-left mt-2">
+              Join us in this pioneering effort to create a reliable and patient-centric resource for rare disease treatment information. Together, we can make a significant difference in the lives of those affected by rare diseases.
+            </p>
+    
+            <div class="row mt-4">
+              <div class="col-md-12 center-elements">
+                <button class="btn btn-primary btn-lg mt-3" (click)="start()">Start</button>
+              </div>
+            </div>
           </div>
-          </div>
-          </div>
+        </div>
       </div>
     </div>
   </div>
