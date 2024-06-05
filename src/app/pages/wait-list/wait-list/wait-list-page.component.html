@@ -117,20 +117,23 @@
 
                               <h4 class="mt-4">Frequently asked questions</h4>
                               <ul class="list-group">
-                                <li class="list-group-item" *ngFor="let qa of infodata.questionsAnswers">
+                                <li class="list-group-item" *ngFor="let qa of infodata.questionsAnswers; let i = index">
                                   <label class="mt-1">Q: </label>
                                   <input type="text" [(ngModel)]="qa.question" class="form-control mb-2">
                                   
                                   <label>A: </label>
-                                  <textarea [(ngModel)]="qa.answer" class="form-control mb-2" rows="3"></textarea>
-                                  <div class="mt-3">
+                                  <textarea [(ngModel)]="qa.answer" class="form-control mb-2" rows="3" (input)="adjustTextareaHeight($event)"></textarea>
+                                  <div class="mt-3" *ngIf="!qa.isManual">
                                     <label>Rate this question:</label>
                                     <ngb-rating [(rate)]="qa.rating" max="5" class="my-rating col-4"></ngb-rating>
                                   </div>
-                                  <div class="mt-2 mb-2">
+                                  <div class="mt-2 mb-2" *ngIf="!qa.isManual">
                                     <label>Your feedback:</label>
-                                    <textarea class="form-control" rows="2" [(ngModel)]="qa.feedback"></textarea>
+                                    <textarea class="form-control" rows="2" [(ngModel)]="qa.feedback" (input)="adjustTextareaHeight($event)"></textarea>
                                   </div>
+                                  <button *ngIf="qa.isManual" class="btn btn-primary btn-sm" (click)="deleteQuestionAnswer(i)">
+                                    <i class="fa fa-trash"></i>
+                                  </button>
                                 </li>
                               </ul>
 
@@ -141,7 +144,7 @@
                               </div>
                               <div class="mb-3">
                                 <label for="answer" class="form-label">Your answer</label>
-                                <textarea class="form-control" id="answer" [(ngModel)]="newAnswer" rows="3"></textarea>
+                                <textarea class="form-control" id="answer" [(ngModel)]="newAnswer" rows="3" (input)="adjustTextareaHeight($event)"></textarea>
                               </div>
                               <button class="btn btn-primary" (click)="addQuestionAnswer()">Add question and answer</button>
                             </div>

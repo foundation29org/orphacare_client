@@ -1,6 +1,6 @@
 import { NgbModal, NgbModalRef, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { PrivacyPolicyPageComponent } from 'app/pages/content-pages/privacy-policy/privacy-policy.component';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewChecked, ChangeDetectorRef  } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { ApiDx29ServerService } from 'app/shared/services/api-dx29-server.servic
   providers: [ApiDx29ServerService]
 })
 
-export class WaitListPageComponent implements OnInit, OnDestroy {
+export class WaitListPageComponent implements OnInit, OnDestroy, AfterViewChecked {
   modalReference: NgbModalRef;
 
 
@@ -43,7 +43,7 @@ export class WaitListPageComponent implements OnInit, OnDestroy {
   newQuestion = '';
   newAnswer = '';
   
-  constructor(public translate: TranslateService, public toastr: ToastrService, private apiDx29ServerService: ApiDx29ServerService, private modalService: NgbModal) {
+  constructor(public translate: TranslateService, public toastr: ToastrService, private apiDx29ServerService: ApiDx29ServerService, private modalService: NgbModal, private cdr: ChangeDetectorRef) {
   }
 
 
@@ -55,6 +55,11 @@ export class WaitListPageComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
+  }
+
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
+    this.adjustAllTextareas();
   }
 
   start(){
@@ -178,8 +183,10 @@ getInfo(name){
   this.subscription.add(this.apiDx29ServerService.getInfo(name)
   .subscribe((res: any) => {
     console.log(res)
+    res.data = res.data.replace(/【.*?】/g, "");
     this.infodata = JSON.parse(res.data);
     this.loadingData = false;
+    this.adjustAllTextareas();
   }, (err) => {
     console.log(err);
     this.loadingData = false;
@@ -187,13 +194,32 @@ getInfo(name){
   }));
 }
 
+adjustAllTextareas() {
+  const textareas = document.querySelectorAll('textarea');
+  textareas.forEach((textarea: HTMLTextAreaElement) => {
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight + 10}px`;
+  });
+}
+
+adjustTextareaHeight(event: Event) {
+  const textarea = event.target as HTMLTextAreaElement;
+  textarea.style.height = 'auto';
+  textarea.style.height = `${textarea.scrollHeight}px`;
+}
+
 
 addQuestionAnswer() {
   if (this.newQuestion && this.newAnswer) {
-    this.infodata.questionsAnswers.push({ question: this.newQuestion, answer: this.newAnswer });
+    this.infodata.questionsAnswers.push({ question: this.newQuestion, answer: this.newAnswer, isManual: true });
     this.newQuestion = '';
     this.newAnswer = '';
+    setTimeout(() => this.adjustAllTextareas(), 0);
   }
+}
+
+deleteQuestionAnswer(index: number) {
+  this.infodata.questionsAnswers.splice(index, 1);
 }
 
 saveAllData(){
