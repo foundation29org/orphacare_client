@@ -42,6 +42,7 @@ export class WaitListPageComponent implements OnInit, OnDestroy, AfterViewChecke
   infodata: any = {}
   newQuestion = '';
   newAnswer = '';
+  generatingAnswer = false;
   
   constructor(public translate: TranslateService, public toastr: ToastrService, private apiDx29ServerService: ApiDx29ServerService, private modalService: NgbModal, private cdr: ChangeDetectorRef) {
   }
@@ -208,6 +209,27 @@ adjustTextareaHeight(event: Event) {
   textarea.style.height = `${textarea.scrollHeight}px`;
 }
 
+
+geneateAnswer(){
+  this.generatingAnswer = true;
+  let info = {
+    "name": this.actualInfoOneDisease.name,
+    "question": this.newQuestion,
+    "orphanDrugs": this.infodata.orphanDrugs
+  };
+  this.subscription.add(this.apiDx29ServerService.getAnswer(info)
+  .subscribe((res: any) => {
+    console.log(res)
+    res.data = res.data.replace(/【.*?】/g, "");
+    this.newAnswer = res.data;
+    this.adjustAllTextareas();
+    this.generatingAnswer = false;
+  }, (err) => {
+    console.log(err);
+    this.generatingAnswer = false;
+    this.toastr.error(this.translate.instant("generics.error try again"));
+  }));
+}
 
 addQuestionAnswer() {
   if (this.newQuestion && this.newAnswer) {
